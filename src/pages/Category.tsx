@@ -57,21 +57,6 @@ export default function CategoryPage() {
     }
   });
 
-  // Sort products
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case 'price_asc':
-        return a.price_from - b.price_from;
-      case 'price_desc':
-        return b.price_from - a.price_from;
-      case 'newest':
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      case 'rating':
-        return b.rating - a.rating;
-      default:
-        return b.rating_count - a.rating_count; // popularity
-    }
-  });
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -82,7 +67,7 @@ export default function CategoryPage() {
           value={priceRange}
           onValueChange={(value) => setPriceRange(value as [number, number])}
           min={0}
-          max={2000}
+          max={5000}
           step={10}
           className="mb-4"
         />
@@ -96,7 +81,7 @@ export default function CategoryPage() {
       <div className="filter-section">
         <h3 className="font-semibold mb-4">Značka</h3>
         <div className="space-y-3">
-          {BRANDS.map((brand) => (
+          {brands.map((brand) => (
             <label key={brand} className="flex items-center gap-3 cursor-pointer">
               <Checkbox
                 checked={selectedBrands.includes(brand)}
