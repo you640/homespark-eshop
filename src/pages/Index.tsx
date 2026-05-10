@@ -16,6 +16,9 @@ const FEATURES = [
 ];
 
 export default function Index() {
+  const { data: categories = [] } = useCategories();
+  const { data: featuredProducts = [] } = useFeaturedProducts(8);
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -97,7 +100,7 @@ export default function Index() {
         </div>
         
         <div className="categories-grid">
-          {DEMO_CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
         </div>
@@ -146,7 +149,7 @@ export default function Index() {
         </div>
         
         <div className="products-grid">
-          {DEMO_PRODUCTS.slice(0, 8).map((product) => (
+          {featuredProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
