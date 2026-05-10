@@ -48,7 +48,7 @@ export function Header() {
         <div className="section-container flex h-9 items-center justify-between text-sm">
           <div className="flex items-center gap-4 text-muted-foreground">
             <span>📞 +421 123 456 789</span>
-            <span>✉️ info@merkurymarket.sk</span>
+            <span>✉️ info@brickhaus.sk</span>
           </div>
           <div className="flex items-center gap-4 text-muted-foreground">
             <Link to="/spravy" className="hover:text-foreground transition-colors">
@@ -76,7 +76,7 @@ export function Header() {
               <div className="flex flex-col h-full">
                 <div className="p-4 border-b">
                   <Link to="/" className="flex items-center gap-2">
-                    <span className="text-xl font-display font-bold text-gradient">MerkuryMarket</span>
+                    <span className="text-xl font-display font-bold text-gradient">BrickHaus</span>
                   </Link>
                 </div>
                 <nav className="flex-1 overflow-auto p-4">
@@ -116,7 +116,7 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <span className="text-xl md:text-2xl font-display font-bold text-gradient">
-              MerkuryMarket
+              BrickHaus
             </span>
           </Link>
 

@@ -236,7 +236,7 @@ export default function Index() {
       <section className="bg-foreground/5 border-t">
         <div className="section-container py-8 text-center">
           <p className="text-sm text-muted-foreground">
-            <strong>MerkuryMarket Eshop (Demo)</strong> - Toto je demo verzia e-shopu. 
+            <strong>BrickHaus Eshop (Demo)</strong> - Toto je demo verzia e-shopu. 
             Pre testovanie admin panelu použite: <code className="bg-muted px-2 py-1 rounded">admin@demo.sk</code> / <code className="bg-muted px-2 py-1 rounded">demo123</code>
           </p>
         </div>
