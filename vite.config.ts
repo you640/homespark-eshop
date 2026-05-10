@@ -19,8 +19,8 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'offline.html'],
       manifest: {
-        name: 'MerkuryMarket Eshop',
-        short_name: 'MerkuryMarket',
+        name: 'BrickHaus Eshop',
+        short_name: 'BrickHaus',
         description: 'Home improvement & furniture e-commerce - Quality products for your home',
         theme_color: '#f5920a',
         background_color: '#faf8f5',
