@@ -399,6 +399,54 @@ export type Database = {
           },
         ]
       }
+      product_payment_links: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          is_active: boolean
+          label: string | null
+          product_id: string
+          stripe_payment_link_id: string
+          stripe_price_id: string
+          stripe_product_id: string
+          updated_at: string
+          url: string
+          variant_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          product_id: string
+          stripe_payment_link_id: string
+          stripe_price_id: string
+          stripe_product_id: string
+          updated_at?: string
+          url: string
+          variant_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          product_id?: string
+          stripe_payment_link_id?: string
+          stripe_price_id?: string
+          stripe_product_id?: string
+          updated_at?: string
+          url?: string
+          variant_id?: string | null
+        }
+        Relationships: []
+      }
       product_variants: {
         Row: {
           attributes: Json | null
