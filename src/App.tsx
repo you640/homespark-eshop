@@ -31,6 +31,7 @@ const App = () => (
             <Route path="/registracia" element={<Register />} />
             <Route path="/kosik" element={<Cart />} />
             <Route path="/kategoria/:slug" element={<Category />} />
+            <Route path="/produkt/:slug" element={<Product />} />
             <Route path="/pokladna" element={<Checkout />} />
             <Route path="/objednavka/success" element={<OrderSuccess />} />
             <Route path="/objednavka/cancel" element={<OrderCancel />} />
