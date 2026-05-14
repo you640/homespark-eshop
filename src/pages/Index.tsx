@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowRight, Truck, Shield, Headphones, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Layout } from '@/components/layout/Layout';
@@ -21,6 +22,11 @@ export default function Index() {
 
   return (
     <Layout>
+      <Helmet>
+        <title>MerkuryMarket – Všetko pre váš domov</title>
+        <meta name="description" content="Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie za skvelé ceny. Doprava zadarmo nad 49€." />
+        <link rel="canonical" href="https://abode-forge-store.lovable.app/" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-center">
         <div 
