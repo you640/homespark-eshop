@@ -67,7 +67,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block">
               <span className="text-2xl font-display font-bold text-primary">
-                BrickHaus
+                MerkuryMarket
               </span>
             </Link>
             <p className="mt-4 text-sm text-background/70 leading-relaxed">
@@ -149,8 +149,8 @@ export function Footer() {
                 <Mail className="h-5 w-5 shrink-0 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm text-background/70">E-mail</p>
-                  <a href="mailto:info@brickhaus.sk" className="font-medium hover:text-primary transition-colors">
-                    info@brickhaus.sk
+                  <a href="mailto:info@merkurymarket.sk" className="font-medium hover:text-primary transition-colors">
+                    info@merkurymarket.sk
                   </a>
                 </div>
               </li>
@@ -168,7 +168,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-background/60">
-            © 2026 BrickHaus Eshop (Demo). Všetky práva vyhradené.
+            © 2026 MerkuryMarket. Všetky práva vyhradené.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-background/60">
             {FOOTER_LINKS.info.slice(3).map((link) => (
