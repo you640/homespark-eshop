@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, Copy, ExternalLink, Trash2, Plus, ShieldAlert } from "lucide-react";
+import { Loader2, Copy, ExternalLink, Trash2, Plus, ShieldAlert, CopyCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -152,6 +152,33 @@ export default function Admin() {
     toast.success("URL skopírované");
   };
 
+  const formatLinks = (productName: string, list: PaymentLink[]) =>
+    list
+      .map((l) => `${l.label ?? productName} – ${formatPrice(l.amount)}\n${l.url}`)
+      .join("\n\n");
+
+  const copyProductLinks = async (productName: string, list: PaymentLink[]) => {
+    if (list.length === 0) return;
+    await navigator.clipboard.writeText(formatLinks(productName, list));
+    toast.success(`Skopírovaných ${list.length} odkazov`);
+  };
+
+  const copyAllLinks = async () => {
+    if (links.length === 0) {
+      toast.error("Žiadne payment linky");
+      return;
+    }
+    const productMap = new Map(products.map((p) => [p.id, p.name]));
+    const grouped = Object.entries(linksByProduct)
+      .map(([pid, list]) => {
+        const name = productMap.get(pid) ?? "Produkt";
+        return `=== ${name} ===\n${formatLinks(name, list)}`;
+      })
+      .join("\n\n");
+    await navigator.clipboard.writeText(grouped);
+    toast.success(`Skopírovaných ${links.length} odkazov`);
+  };
+
   const linksByProduct = links.reduce<Record<string, PaymentLink[]>>((acc, l) => {
     (acc[l.product_id] ??= []).push(l);
     return acc;
@@ -160,12 +187,20 @@ export default function Admin() {
   return (
     <Layout>
       <div className="section-container py-8 md:py-12">
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-display font-bold mb-2">Admin – Payment Links</h1>
-          <p className="text-muted-foreground text-sm">
-            Vytvor Stripe Payment Link ku každému produktu. Linky sa vytvárajú priamo v tvojom
-            Stripe účte a dajú sa zdielať kdekoľvek.
-          </p>
+        <div className="mb-8 flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-display font-bold mb-2">Admin – Payment Links</h1>
+            <p className="text-muted-foreground text-sm">
+              Vytvor Stripe Payment Link ku každému produktu. Linky sa vytvárajú priamo v tvojom
+              Stripe účte (live mode) a dajú sa zdielať kdekoľvek.
+            </p>
+          </div>
+          {links.length > 0 && (
+            <Button variant="outline" onClick={copyAllLinks}>
+              <CopyCheck className="h-4 w-4 mr-2" />
+              Kopírovať všetky ({links.length})
+            </Button>
+          )}
         </div>
 
         {loading ? (
@@ -184,9 +219,20 @@ export default function Admin() {
                         {productLinks.length === 1 ? "" : "ov"}
                       </p>
                     </div>
-                    <Button size="sm" onClick={() => openDialog(p)}>
-                      <Plus className="h-4 w-4 mr-1" /> Nový Payment Link
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      {productLinks.length > 1 && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => copyProductLinks(p.name, productLinks)}
+                        >
+                          <CopyCheck className="h-4 w-4 mr-1" /> Kopírovať všetky
+                        </Button>
+                      )}
+                      <Button size="sm" onClick={() => openDialog(p)}>
+                        <Plus className="h-4 w-4 mr-1" /> Nový Payment Link
+                      </Button>
+                    </div>
                   </div>
 
                   {productLinks.length > 0 && (

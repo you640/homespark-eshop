@@ -130,14 +130,6 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Demo credentials */}
-          <div className="mt-6 p-4 bg-muted rounded-xl text-center">
-            <p className="text-sm text-muted-foreground">
-              <strong>Demo prístup:</strong><br />
-              E-mail: <code className="bg-background px-1 rounded">admin@demo.sk</code><br />
-              Heslo: <code className="bg-background px-1 rounded">demo123</code>
-            </p>
-          </div>
         </div>
       </div>
     </Layout>

@@ -1,100 +1,66 @@
-## Cieľ
+## 1. Tlačidlo „Kopírovať všetko" pre Payment Linky
 
-Doplniť Stripe platby tak, aby:
-1. Checkout cez `/pokladna` reálne fungoval end-to-end (platba → uloženie objednávky → potvrdenie).
-2. Vznikol jednoduchý **admin dashboard**, kde si ku každému produktu (resp. variante) vieš vytvoriť vlastný **Stripe Payment Link** a uložiť/skopírovať ho.
+### Stránka produktu (`src/pages/Product.tsx`)
+- Pri viac ako 1 linku zobraziť v hlavičke sekcie tlačidlo **„Kopírovať všetko"** (ikona `Copy`).
+- Funkcia naformátuje všetky linky do textu vo formáte:
+  ```
+  {label} – {amount €}
+  {url}
+  
+  {label} – {amount €}
+  {url}
+  ```
+- Po kliknutí: `navigator.clipboard.writeText(...)` + toast „Skopírovaných X odkazov".
 
----
-
-## 1. Doplnenie checkoutu (existujúca edge funkcia + nová verify funkcia)
-
-**Problém teraz:** `create-checkout-session` vytvorí Stripe session, ale objednávka sa nikdy neuloží do DB a stránka `/objednavka/success` len vyčistí košík. Žiadny záznam v `orders` ani v Stripe Dashboard pod tvojím účtom neuvidíš spárovaný.
-
-**Riešenie (bez webhookov, podľa Lovable best-practice):**
-
-- **Edge funkcia `create-checkout-session`** (úprava existujúcej):
-  - Pred vytvorením session vloží do tabuľky `orders` riadok so statusom `pending` (subtotal, shipping, discount, total, email, payment_method='stripe', shipping_address={}).
-  - Vloží `order_items` s snapshotmi (name, price, quantity, sku, variant_id).
-  - Pošle `metadata: { order_id }` do Stripe session.
-  - `success_url` bude obsahovať `?session_id={CHECKOUT_SESSION_ID}&order_id=<uuid>`.
-
-- **Nová edge funkcia `verify-payment`**:
-  - Vstup: `session_id`.
-  - Cez Stripe SDK overí `payment_status === 'paid'`.
-  - Update `orders.status` → `paid` (alebo `failed`/`pending`).
-  - Vráti status pre frontend.
-
-- **Stránka `/objednavka/success`**:
-  - Po načítaní zavolá `verify-payment` so `session_id`.
-  - Zobrazí stav (Loading → Úspech / Čaká na platbu).
-  - Vyčistí košík len pri `paid`.
-
-- **Cancel route `/objednavka/cancel`** (nová):
-  - Stripe sem presmeruje pri zrušení platby. Zobrazí "Platba zrušená" + tlačidlo Späť do košíka.
+### Admin dashboard (`src/pages/Admin.tsx`)
+- Pri každom produkte, ak má 2+ linky, pridať vedľa tlačidla „Nový Payment Link" druhé tlačidlo **„Kopírovať všetky"**, ktoré skopíruje všetky linky daného produktu (rovnaký formát).
+- Navrchu stránky tlačidlo **„Kopírovať všetky linky (všetky produkty)"** – zoskupí výstup po produktoch:
+  ```
+  === {Názov produktu} ===
+  {label} – {amount €}
+  {url}
+  ```
 
 ---
 
-## 2. Admin Dashboard – Payment Links per produkt
+## 2. Príprava na produkčné nasadenie
 
-**Nová tabuľka `product_payment_links`**:
-```text
-id, product_id, variant_id (nullable), 
-stripe_product_id, stripe_price_id, stripe_payment_link_id,
-url (public link), label, amount, currency,
-created_at, updated_at
-```
-RLS: SELECT všetkým (verejné), INSERT/UPDATE/DELETE iba `admin` rola.
+### A. Branding & obsah
+- **`index.html`**: zmena `<title>` a `og:title` z „BrickHaus Eshop (Demo)" → finálny názov (default: **„MerkuryMarket"** podľa memory; ak chceš iný, dáš vedieť po schválení).
+- **`vite.config.ts`** PWA manifest: `name`, `short_name`, `description` zladiť s novým brandom; `theme_color` ponechať alebo upraviť.
+- Odstrániť všetky „(Demo)" reťazce z UI.
 
-**Nová edge funkcia `admin-create-payment-link`** (vyžaduje admin rolu):
-- Vstup: `product_id`, voliteľne `variant_id`, `name`, `amount` (EUR), `description`, `image_url`.
-- Vytvorí Stripe Product → Stripe Price → Stripe Payment Link.
-- Uloží do `product_payment_links` a vráti `url`.
+### B. SEO (per-route)
+- Doinštalovať `react-helmet-async`, obaliť app v `HelmetProvider`.
+- Pridať `<Helmet>` na: `Index`, `Category`, `Product`, `Cart`, `Checkout`, `Login`, `Register`, `OrderSuccess` – každý s vlastným `title`, `description`, `canonical`, `og:*`.
+- Na `Product` doplniť JSON-LD typu `Product` (name, image, price, availability).
+- Vytvoriť `public/sitemap.xml` (statický základ) a `public/robots.txt` skontrolovať/upraviť (allow + sitemap URL).
 
-**Nová edge funkcia `admin-delete-payment-link`**:
-- Deaktivuje Payment Link na Stripe (`active: false`) a zmaže riadok z DB.
+### C. Stripe v produkčnom režime
+- Si už dodal **live** kľúč (`pk_live_...`/sk_live), takže Stripe je v live móde – ✅.
+- **Doplniť**: v `Checkout.tsx` po úspešnom `create-checkout-session` vyčistiť košík **až** po overení v `OrderSuccess` (už je tak).
+- Skontrolovať že `success_url`/`cancel_url` používajú produkčnú doménu cez `req.headers.get("origin")` – ✅, funguje automaticky z prehliadača.
+- Pridať poznámku do dashboardu, že linky sa vytvárajú v reálnom Stripe účte (ostré platby).
 
-**Nová stránka `/admin`** (chránená `has_role(uid, 'admin')`):
-- Zoznam produktov s ich existujúcimi Payment Linkami.
-- Pri každom produkte tlačidlo **„Vytvoriť Payment Link"** → modal s formulárom:
-  - Variant selector (ak má produkt varianty).
-  - Cena (predvyplnená z variantu).
-  - Popis / label.
-  - Submit → zavolá `admin-create-payment-link`.
-- Pre existujúce linky: **Kopírovať URL**, **Otvoriť**, **Zmazať**.
+### D. Bezpečnosť
+- Spustiť **security scan** (Supabase linter + security scanner) a opraviť kritické nálezy (RLS, exposed data).
+- Overiť RLS na `product_payment_links` – aktuálne `Anyone can view payment links` (SELECT = true). To je OK ak chceš, aby boli verejne viditeľné na stránke produktu (pre zákazníkov). Ak nie, treba zmeniť na admin-only + samostatný verejný view.
+- Skontrolovať že `verify-payment` neumožní falošný update objednávky (volá Stripe ako single source of truth – ✅).
 
-**Login do admina:**
-- Pridáme route `/admin` chránenú `useAuth` + kontrolou role z tabuľky `user_roles`.
-- Návod ako si pridať admin rolu (cez SQL Editor) bude v README + krátka inštrukcia v UI ak nie si admin.
+### E. Produkčný build & deploy check
+- Edge funkcie deploynúť (`create-checkout-session`, `verify-payment`, `admin-create-payment-link`, `admin-delete-payment-link`) a overiť logy.
+- Test end-to-end: pridanie produktu do košíka → checkout → live Stripe → success → objednávka v DB má status `paid`.
+- Test admin: vytvorenie payment linku → otvorenie URL → testovacia platba.
 
----
-
-## 3. Drobnosti
-
-- Header dostane link na `/admin` (zobrazený len ak je user admin).
-- README aktualizujem s testovacími Stripe kartami (`4242 4242 4242 4242`).
-- Toast notifikácie pre úspech/chybu pri všetkých Stripe akciách.
+### F. Drobnosti / odporúčania (oznámim, neimplementujem bez súhlasu)
+- Zvážiť custom doménu (teraz `abode-forge-store.lovable.app`).
+- Pridať Cookie consent (už existuje `CookieConsent.tsx` – overiť, že je vo `Layout`).
+- GDPR: stránky „Obchodné podmienky", „Ochrana osobných údajov", „Reklamácie" – chýbajú, **odporúčam doplniť**.
+- Email notifikácie pre zákazníka po objednávke (cez Lovable Email) – chýba, **odporúčam doplniť**.
 
 ---
 
-## Technické detaily
-
-- **Migrácia DB:** nová tabuľka `product_payment_links` + RLS policies + trigger `update_updated_at_column`.
-- **Edge funkcie (3 nové + 1 úprava):**
-  - `create-checkout-session` (úprava — vkladá pending order)
-  - `verify-payment` (nová — overuje session a aktualizuje order)
-  - `admin-create-payment-link` (nová — vyžaduje admin)
-  - `admin-delete-payment-link` (nová — vyžaduje admin)
-- **Stripe SDK:** `npm:stripe@^17` cez Deno, API verzia `2024-12-18.acacia`.
-- **Nové frontend súbory:**
-  - `src/pages/Admin.tsx`
-  - `src/pages/OrderCancel.tsx`
-  - `src/components/admin/PaymentLinkDialog.tsx`
-  - `src/hooks/useIsAdmin.ts`
-- **Routy v `App.tsx`:** `/admin`, `/objednavka/cancel`.
-- Bez webhookov (podľa Lovable Stripe best-practice — verifikácia cez `verify-payment` na success stránke je dostatočná pre demo a netreba konfigurovať webhook secret).
-
----
-
-## Otvorená otázka
-
-Aby si sa vedel prihlásiť do `/admin`, potrebuješ admin rolu. Stačí mi tvoj email s ktorým sa registruješ a po nasadení migrácie ti pošlem 1 SQL príkaz, ktorý si spustíš (alebo to spravím sám cez insert tool, keď mi povieš email).
+## Otázky pred spustením
+1. **Finálny názov brandu** pre title/PWA/SEO? (default = „MerkuryMarket" z memory)
+2. **Doména** pre canonical/sitemap – `abode-forge-store.lovable.app` alebo plánuješ vlastnú?
+3. Mám hneď doplniť aj **stránky GDPR/obchodné podmienky** a **potvrdzovacie emaily**, alebo to nechať na ďalšiu iteráciu?

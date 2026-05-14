@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader2, Copy, ExternalLink, ArrowLeft, LinkIcon } from "lucide-react";
+import { Helmet } from "react-helmet-async";
+import { Loader2, Copy, ExternalLink, ArrowLeft, LinkIcon, CopyCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
+
+const SITE_URL = "https://abode-forge-store.lovable.app";
 
 interface Product {
   id: string;
@@ -62,6 +65,15 @@ export default function Product() {
     toast.success("URL skopírované");
   };
 
+  const copyAll = async () => {
+    if (!product || links.length === 0) return;
+    const text = links
+      .map((l) => `${l.label ?? product.name} – ${formatPrice(l.amount)}\n${l.url}`)
+      .join("\n\n");
+    await navigator.clipboard.writeText(text);
+    toast.success(`Skopírovaných ${links.length} odkazov`);
+  };
+
   if (loading) {
     return (
       <Layout>
@@ -84,9 +96,36 @@ export default function Product() {
   }
 
   const image = product.product_images?.[0];
+  const canonical = `${SITE_URL}/produkt/${product.slug}`;
+  const desc = product.short_description ?? `${product.name} – kúpte v MerkuryMarket.`;
 
   return (
     <Layout>
+      <Helmet>
+        <title>{`${product.name} – MerkuryMarket`}</title>
+        <meta name="description" content={desc} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:title" content={product.name} />
+        <meta property="og:description" content={desc} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:type" content="product" />
+        {image && <meta property="og:image" content={image.url} />}
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          description: desc,
+          ...(image ? { image: image.url } : {}),
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "EUR",
+            price: product.price_from,
+            availability: "https://schema.org/InStock",
+            url: canonical,
+          },
+        })}</script>
+      </Helmet>
+
       <div className="section-container py-6 md:py-10">
         <Link
           to="/"
@@ -128,9 +167,17 @@ export default function Product() {
 
         {/* Payment Links section */}
         <section className="bg-card border rounded-2xl p-6 md:p-8">
-          <div className="flex items-center gap-2 mb-2">
-            <LinkIcon className="h-5 w-5 text-primary" />
-            <h2 className="text-lg md:text-xl font-display font-bold">Platobné odkazy</h2>
+          <div className="flex items-start justify-between gap-4 mb-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <LinkIcon className="h-5 w-5 text-primary" />
+              <h2 className="text-lg md:text-xl font-display font-bold">Platobné odkazy</h2>
+            </div>
+            {links.length > 1 && (
+              <Button size="sm" variant="outline" onClick={copyAll}>
+                <CopyCheck className="h-4 w-4 mr-2" />
+                Kopírovať všetko ({links.length})
+              </Button>
+            )}
           </div>
           <p className="text-sm text-muted-foreground mb-6">
             Priame Stripe Payment Links pre tento produkt – skopíruj a pošli zákazníkovi, alebo
