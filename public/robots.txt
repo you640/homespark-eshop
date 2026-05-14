@@ -18,4 +18,4 @@ Disallow: /admin
 Disallow: /pokladna
 Disallow: /objednavka
 
-Sitemap: https://abode-forge-store.lovable.app/sitemap.xml
+Sitemap: https://www.merkurymarket.sk/sitemap.xml

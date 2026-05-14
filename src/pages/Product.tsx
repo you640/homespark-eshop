@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 
-const SITE_URL = "https://abode-forge-store.lovable.app";
+const SITE_URL = "https://www.merkurymarket.sk";
 
 interface Product {
   id: string;

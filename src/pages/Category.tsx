@@ -132,7 +132,7 @@ export default function CategoryPage() {
       <Helmet>
         <title>{`${categoryName} – MerkuryMarket`}</title>
         <meta name="description" content={`${categoryName} v MerkuryMarket. Kvalita za skvelé ceny, doprava zadarmo nad 49€.`} />
-        <link rel="canonical" href={`https://abode-forge-store.lovable.app/kategoria/${slug ?? 'vsetko'}`} />
+        <link rel="canonical" href={`https://www.merkurymarket.sk/kategoria/${slug ?? 'vsetko'}`} />
       </Helmet>
       <div className="section-container py-6 md:py-8">
         {/* Breadcrumb */}

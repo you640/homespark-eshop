@@ -2,7 +2,7 @@
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
-const BASE_URL = "https://abode-forge-store.lovable.app";
+const BASE_URL = "https://www.merkurymarket.sk";
 
 interface SitemapEntry {
   path: string;

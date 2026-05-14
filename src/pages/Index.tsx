@@ -25,7 +25,7 @@ export default function Index() {
       <Helmet>
         <title>MerkuryMarket – Všetko pre váš domov</title>
         <meta name="description" content="Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie za skvelé ceny. Doprava zadarmo nad 49€." />
-        <link rel="canonical" href="https://abode-forge-store.lovable.app/" />
+        <link rel="canonical" href="https://www.merkurymarket.sk/" />
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-center">
@@ -37,20 +37,20 @@ export default function Index() {
         </div>
         
         <div className="relative section-container py-16 md:py-24">
-          <div className="max-w-xl">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-sm mb-6 animate-fade-in">
+          <div className="max-w-xl glass p-8 md:p-12 rounded-3xl animate-scale-in">
+            <span className="inline-block px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-sm mb-6 animate-float">
               🎉 Novoročný výpredaj - zľavy až 50%
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-background leading-tight animate-slide-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
               Všetko pre váš
               <span className="text-primary"> dokonalý domov</span>
             </h1>
-            <p className="mt-6 text-lg md:text-xl text-background/80 leading-relaxed animate-slide-up">
+            <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed">
               Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie. 
               Tisíce produktov za najlepšie ceny s dopravou zadarmo.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4 animate-slide-up">
-              <Link to="/kategoria/vsetko" className="btn-hero">
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link to="/kategoria/vsetko" className="btn-hero shadow-lg hover:shadow-primary/30">
                 Nakupovať
                 <ArrowRight className="h-5 w-5" />
               </Link>
@@ -58,7 +58,7 @@ export default function Index() {
                 variant="outline" 
                 size="lg" 
                 asChild
-                className="border-background/30 text-background hover:bg-background/10 px-8"
+                className="border-primary/30 text-primary hover:bg-primary/10 hover:text-primary px-8"
               >
                 <Link to="/spravy">
                   Inšpirácie & tipy

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingCart, User, Menu, X, Heart, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,13 @@ export function Header() {
   const navigate = useNavigate();
   const itemCount = useCartStore((state) => state.getItemCount());
   const { user, signOut } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +49,12 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+    <header className={cn(
+      "sticky top-0 z-50 w-full transition-all duration-300",
+      isScrolled 
+        ? "border-b bg-card/80 backdrop-blur-lg shadow-sm py-0" 
+        : "border-b bg-card py-1"
+    )}>
       {/* Top bar */}
       <div className="hidden border-b bg-muted/50 md:block">
         <div className="section-container flex h-9 items-center justify-between text-sm">

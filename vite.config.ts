@@ -101,4 +101,15 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['lucide-react', 'recharts', 'date-fns', 'clsx', 'tailwind-merge'],
+          'vendor-query': ['@tanstack/react-query'],
+        }
+      }
+    }
+  }
 }));

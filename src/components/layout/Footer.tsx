@@ -73,6 +73,11 @@ export function Footer() {
             <p className="mt-4 text-sm text-background/70 leading-relaxed">
               Váš spoľahlivý partner pre všetko do domácnosti. Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie za skvelé ceny.
             </p>
+            <div className="mt-6 text-xs text-background/50 space-y-1">
+              <p className="font-semibold text-background/70">KsiX s.r.o.</p>
+              <p>Lužná 5, 851 04 Bratislava</p>
+              <p>IČO: 51907518 | DIČ: 2120826686</p>
+            </div>
             <div className="flex gap-3 mt-6">
               <a 
                 href="#" 

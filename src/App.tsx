@@ -14,6 +14,11 @@ import OrderSuccess from "./pages/OrderSuccess";
 import OrderCancel from "./pages/OrderCancel";
 import Admin from "./pages/Admin";
 import Product from "./pages/Product";
+import Spravy from "./pages/Spravy";
+import Predajne from "./pages/Predajne";
+import Wishlist from "./pages/Wishlist";
+import Sukromie from "./pages/Sukromie";
+import Podmienky from "./pages/Podmienky";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,7 +29,12 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/prihlasenie" element={<Login />} />
@@ -36,6 +46,11 @@ const App = () => (
             <Route path="/objednavka/success" element={<OrderSuccess />} />
             <Route path="/objednavka/cancel" element={<OrderCancel />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/spravy" element={<Spravy />} />
+            <Route path="/predajne" element={<Predajne />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/sukromie" element={<Sukromie />} />
+            <Route path="/podmienky" element={<Podmienky />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
