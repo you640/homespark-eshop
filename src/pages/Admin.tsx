@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, Copy, ExternalLink, Trash2, Plus, ShieldAlert } from "lucide-react";
+import { Loader2, Copy, ExternalLink, Trash2, Plus, ShieldAlert, CopyCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -150,6 +150,33 @@ export default function Admin() {
   const copyUrl = async (url: string) => {
     await navigator.clipboard.writeText(url);
     toast.success("URL skopírované");
+  };
+
+  const formatLinks = (productName: string, list: PaymentLink[]) =>
+    list
+      .map((l) => `${l.label ?? productName} – ${formatPrice(l.amount)}\n${l.url}`)
+      .join("\n\n");
+
+  const copyProductLinks = async (productName: string, list: PaymentLink[]) => {
+    if (list.length === 0) return;
+    await navigator.clipboard.writeText(formatLinks(productName, list));
+    toast.success(`Skopírovaných ${list.length} odkazov`);
+  };
+
+  const copyAllLinks = async () => {
+    if (links.length === 0) {
+      toast.error("Žiadne payment linky");
+      return;
+    }
+    const productMap = new Map(products.map((p) => [p.id, p.name]));
+    const grouped = Object.entries(linksByProduct)
+      .map(([pid, list]) => {
+        const name = productMap.get(pid) ?? "Produkt";
+        return `=== ${name} ===\n${formatLinks(name, list)}`;
+      })
+      .join("\n\n");
+    await navigator.clipboard.writeText(grouped);
+    toast.success(`Skopírovaných ${links.length} odkazov`);
   };
 
   const linksByProduct = links.reduce<Record<string, PaymentLink[]>>((acc, l) => {
