@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { ChevronRight, Grid3X3, Grid2X2, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -129,11 +129,11 @@ export default function CategoryPage() {
 
   return (
     <Layout>
-      <Helmet>
-        <title>{`${categoryName} – MerkuryMarket`}</title>
-        <meta name="description" content={`${categoryName} v MerkuryMarket. Kvalita za skvelé ceny, doprava zadarmo nad 49€.`} />
-        <link rel="canonical" href={`https://www.merkurymarket.sk/kategoria/${slug ?? 'vsetko'}`} />
-      </Helmet>
+      <SEO 
+        title={categoryName} 
+        description={`${categoryName} v MerkuryMarket. Kvalita za skvelé ceny, doprava zadarmo nad 49€.`}
+        canonical={`/kategoria/${slug ?? 'vsetko'}`}
+      />
       <div className="section-container py-6 md:py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">

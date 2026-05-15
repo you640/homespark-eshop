@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/seo/SEO";
 import { XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -6,6 +7,7 @@ import { Layout } from "@/components/layout/Layout";
 export default function OrderCancel() {
   return (
     <Layout hideMobileCart>
+      <SEO title="Platba zrušená" noIndex={true} />
       <div className="section-container py-16 md:py-24 text-center max-w-md mx-auto">
         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-destructive/10 flex items-center justify-center">
           <XCircle className="h-12 w-12 text-destructive" />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { SEO } from "@/components/seo/SEO";
 import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -42,6 +43,7 @@ export default function OrderSuccess() {
 
   return (
     <Layout hideMobileCart>
+      <SEO title="Objednávka úspešná" noIndex={true} />
       <div className="section-container py-16 md:py-24 text-center max-w-md mx-auto">
         {status === "loading" && (
           <>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { SEO } from "@/components/seo/SEO";
 import { Helmet } from "react-helmet-async";
 import { Loader2, Copy, ExternalLink, ArrowLeft, LinkIcon, CopyCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -101,15 +102,14 @@ export default function Product() {
 
   return (
     <Layout>
+      <SEO 
+        title={product.name} 
+        description={desc}
+        canonical={`/produkt/${product.slug}`}
+        ogImage={image?.url}
+        ogType="product"
+      />
       <Helmet>
-        <title>{`${product.name} – MerkuryMarket`}</title>
-        <meta name="description" content={desc} />
-        <link rel="canonical" href={canonical} />
-        <meta property="og:title" content={product.name} />
-        <meta property="og:description" content={desc} />
-        <meta property="og:url" content={canonical} />
-        <meta property="og:type" content="product" />
-        {image && <meta property="og:image" content={image.url} />}
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Product",

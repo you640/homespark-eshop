@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { SEO } from "@/components/seo/SEO";
 import { Loader2, ArrowLeft, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,6 +66,7 @@ export default function Checkout() {
 
   return (
     <Layout hideMobileCart>
+      <SEO title="Pokladňa" noIndex={true} />
       <div className="section-container py-8 md:py-12">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 text-sm">
           <ArrowLeft className="h-4 w-4" /> Späť do košíka

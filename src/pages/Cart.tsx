@@ -7,6 +7,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { formatPrice } from '@/lib/utils';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { SEO } from '@/components/seo/SEO';
 
 const FREE_SHIPPING_THRESHOLD = 49;
 
@@ -70,6 +71,7 @@ export default function Cart() {
 
   return (
     <Layout hideMobileCart>
+      <SEO title="Nákupný košík" noIndex={true} />
       <div className="section-container py-8 md:py-12">
         <h1 className="text-2xl md:text-3xl font-display font-bold mb-8">
           Nákupný košík ({items.length} {items.length === 1 ? 'položka' : items.length < 5 ? 'položky' : 'položiek'})
