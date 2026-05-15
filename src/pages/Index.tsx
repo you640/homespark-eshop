@@ -36,29 +36,22 @@ export default function Index() {
           <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/70 to-transparent" />
         </div>
         
-        <div className="relative section-container py-16 md:py-24">
-          <div className="max-w-xl glass p-8 md:p-12 rounded-3xl animate-scale-in">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-sm mb-6 animate-float">
-              🎉 Novoročný výpredaj - zľavy až 50%
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
-              Všetko pre váš
-              <span className="text-primary"> dokonalý domov</span>
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed">
+        <div className="relative section-container py-10 md:py-16">
+          <div className="max-w-md glass p-6 md:p-8 rounded-2xl animate-scale-in">
+            <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
               Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie. 
               Tisíce produktov za najlepšie ceny s dopravou zadarmo.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/kategoria/vsetko" className="btn-hero shadow-lg hover:shadow-primary/30">
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link to="/kategoria/vsetko" className="btn-hero py-2 px-5 text-sm shadow-md hover:shadow-primary/30">
                 Nakupovať
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
               <Button 
                 variant="outline" 
-                size="lg" 
+                size="sm" 
                 asChild
-                className="border-primary/30 text-primary hover:bg-primary/10 hover:text-primary px-8"
+                className="border-primary/30 text-primary hover:bg-primary/10 hover:text-primary px-5 h-9"
               >
                 <Link to="/spravy">
                   Inšpirácie & tipy
