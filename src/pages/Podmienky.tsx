@@ -1,32 +1,64 @@
 import { Layout } from '@/components/layout/Layout';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 
 export default function Podmienky() {
   return (
     <Layout>
-      <Helmet>
-        <title>Obchodné podmienky – MerkuryMarket</title>
-      </Helmet>
-      <div className="section-container py-12 md:py-20">
-        <h1 className="text-3xl md:text-4xl font-display font-bold mb-8">Obchodné podmienky</h1>
-        <div className="prose prose-slate max-w-none">
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">1. Identifikácia prevádzkovateľa</h2>
-            <p>Tento e-shop prevádzkuje spoločnosť:</p>
-            <ul className="list-none pl-0 mt-2 space-y-1">
-              <li><strong>Obchodné meno:</strong> KsiX s.r.o.</li>
-              <li><strong>Sídlo:</strong> Lužná 5, 851 04 Bratislava - mestská časť Petržalka</li>
-              <li><strong>IČO:</strong> 51907518</li>
-              <li><strong>DIČ:</strong> 2120826686</li>
-            </ul>
+      <SEO title="Obchodné podmienky" canonical="/podmienky" />
+      <div className="section-container py-12 md:py-16 max-w-4xl">
+        <h1 className="text-3xl md:text-4xl font-display font-bold mb-8">Všeobecné obchodné podmienky</h1>
+        
+        <div className="prose prose-slate max-w-none space-y-6 text-muted-foreground">
+          <section>
+            <h2 className="text-xl font-bold text-foreground">1. Úvodné ustanovenia</h2>
+            <p>
+              Tieto všeobecné obchodné podmienky (ďalej len „VOP“) upravujú práva a povinnosti medzi spoločnosťou 
+              <strong> KsiX s.r.o.</strong>, so sídlom Lužná 5, 851 04 Bratislava, IČO: 51907518 (ďalej len „Predávajúci“) 
+              a kupujúcim pri predaji tovaru prostredníctvom internetového obchodu MerkuryMarket.
+            </p>
           </section>
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">2. Úvodné ustanovenia</h2>
-            <p>Tieto obchodné podmienky upravujú práva a povinnosti medzi predávajúcim a kupujúcim v rámci online predaja tovaru...</p>
+
+          <section>
+            <h2 className="text-xl font-bold text-foreground">2. Objednávka a kúpna zmluva</h2>
+            <p>
+              Kupujúci objednáva tovar prostredníctvom e-shopu. Odoslaním objednávky kupujúci potvrdzuje, že sa oboznámil 
+              s týmito VOP a súhlasí s nimi. Kúpna zmluva vzniká potvrdením objednávky zo strany Predávajúceho.
+            </p>
           </section>
-          <p className="text-muted-foreground mt-12 text-sm italic">
-            Poznámka: Toto je vzorová stránka. V reálnej prevádzke by tu mali byť kompletné právne texty.
-          </p>
+
+          <section>
+            <h2 className="text-xl font-bold text-foreground">3. Ceny a platobné podmienky</h2>
+            <p>
+              Všetky ceny v e-shope sú uvádzané vrátane DPH. Predávajúci si vyhradzuje právo na zmenu cien. 
+              Kupujúci môže platiť prostredníctvom platobnej brány Stripe (kreditné karty, Apple Pay, Google Pay) 
+              alebo inými dostupnými metódami v košíku.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-foreground">4. Dodacie podmienky</h2>
+            <p>
+              Predávajúci dodáva tovar v rámci Slovenskej republiky. Doprava je zadarmo pri objednávke nad 49€. 
+              Dodacia lehota je zvyčajne 2-5 pracovných dní, ak nie je uvedené inak.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-foreground">5. Odstúpenie od zmluvy</h2>
+            <p>
+              Spotrebiteľ má právo odstúpiť od zmluvy bez udania dôvodu v lehote 14 dní od prevzatia tovaru. 
+              MerkuryMarket rozširuje túto lehotu na <strong>30 dní</strong> pre vybrané produkty. Tovar musí byť vrátený 
+              nepoužitý a v pôvodnom obale.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-foreground">6. Reklamácie a záruka</h2>
+            <p>
+              Na všetok tovar sa vzťahuje zákonná záručná doba 24 mesiacov. Reklamácie sa vybavujú v súlade s Reklamačným poriadkom 
+              Predávajúceho a platnými právnymi predpismi SR.
+            </p>
+          </section>
         </div>
       </div>
     </Layout>

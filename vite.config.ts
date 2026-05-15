@@ -104,10 +104,13 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui': ['lucide-react', 'recharts', 'date-fns', 'clsx', 'tailwind-merge'],
-          'vendor-query': ['@tanstack/react-query'],
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('lucide-react')) return 'vendor-ui';
+            if (id.includes('recharts')) return 'vendor-ui';
+            if (id.includes('@tanstack/react-query')) return 'vendor-query';
+            // Keep React and related in the main vendor chunk to avoid splitting issues
+          }
         }
       }
     }
