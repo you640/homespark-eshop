@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { MobileCartButton } from '@/components/cart/MobileCartButton';
 import { CookieConsent } from '@/components/shared/CookieConsent';
+import { InstallPrompt } from '@/components/shared/InstallPrompt';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ export function Layout({ children, hideFooter = false, hideMobileCart = false }:
       {!hideFooter && <Footer />}
       {!hideMobileCart && <MobileCartButton />}
       <CookieConsent />
+      <InstallPrompt />
     </div>
   );
 }

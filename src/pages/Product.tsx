@@ -172,12 +172,30 @@ export default function Product() {
               <LinkIcon className="h-5 w-5 text-primary" />
               <h2 className="text-lg md:text-xl font-display font-bold">Platobné odkazy</h2>
             </div>
-            {links.length > 1 && (
-              <Button size="sm" variant="outline" onClick={copyAll}>
-                <CopyCheck className="h-4 w-4 mr-2" />
-                Kopírovať všetko ({links.length})
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {navigator.share && (
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => {
+                    navigator.share({
+                      title: product.name,
+                      text: desc,
+                      url: window.location.href,
+                    }).catch(() => {});
+                  }}
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Zdieľať
+                </Button>
+              )}
+              {links.length > 1 && (
+                <Button size="sm" variant="outline" onClick={copyAll}>
+                  <CopyCheck className="h-4 w-4 mr-2" />
+                  Kopírovať všetko ({links.length})
+                </Button>
+              )}
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mb-6">
             Priame Stripe Payment Links pre tento produkt – skopíruj a pošli zákazníkovi, alebo

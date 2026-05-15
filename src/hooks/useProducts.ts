@@ -20,11 +20,14 @@ async function fetchProducts(categorySlug?: string): Promise<ProductWithDetails[
   const { data, error } = await query;
   if (error) throw error;
 
-  return (data || []).map((p: any) => ({
-    ...p,
-    variant: p.product_variants?.[0],
-    image: p.product_images?.[0],
-  }));
+  return (data || []).map((p) => {
+    const product = p as unknown as (Product & { product_variants: ProductVariant[], product_images: ProductImage[] });
+    return {
+      ...product,
+      variant: product.product_variants?.[0],
+      image: product.product_images?.[0],
+    } as ProductWithDetails;
+  });
 }
 
 export function useProducts(categorySlug?: string) {
@@ -45,11 +48,14 @@ export function useFeaturedProducts(limit = 8) {
         .order('rating_count', { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data || []).map((p: any) => ({
-        ...p,
-        variant: p.product_variants?.[0],
-        image: p.product_images?.[0],
-      }));
+      return (data || []).map((p) => {
+        const product = p as unknown as (Product & { product_variants: ProductVariant[], product_images: ProductImage[] });
+        return {
+          ...product,
+          variant: product.product_variants?.[0],
+          image: product.product_images?.[0],
+        } as ProductWithDetails;
+      });
     },
   });
 }

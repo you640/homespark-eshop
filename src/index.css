@@ -141,6 +141,14 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow selection in specific areas */
+  p, span, h1, h2, h3, h4, h5, h6, input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    user-select: text;
   }
 
   h1, h2, h3, h4, h5, h6 {

@@ -21,7 +21,54 @@ import Sukromie from "./pages/Sukromie";
 import Podmienky from "./pages/Podmienky";
 import NotFound from "./pages/NotFound";
 
+import { useEffect } from "react";
+import { useCartStore } from "@/lib/cart-store";
+
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  const itemCount = useCartStore((state) => state.getItemCount());
+
+  useEffect(() => {
+    // Badging API
+    if ('setAppBadge' in navigator) {
+      if (itemCount > 0) {
+        (navigator as any).setAppBadge(itemCount).catch(() => {});
+      } else {
+        (navigator as any).clearAppBadge().catch(() => {});
+      }
+    }
+  }, [itemCount]);
+
+  return (
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/prihlasenie" element={<Login />} />
+        <Route path="/registracia" element={<Register />} />
+        <Route path="/kosik" element={<Cart />} />
+        <Route path="/kategoria/:slug" element={<Category />} />
+        <Route path="/produkt/:slug" element={<Product />} />
+        <Route path="/pokladna" element={<Checkout />} />
+        <Route path="/objednavka/success" element={<OrderSuccess />} />
+        <Route path="/objednavka/cancel" element={<OrderCancel />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/spravy" element={<Spravy />} />
+        <Route path="/predajne" element={<Predajne />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/sukromie" element={<Sukromie />} />
+        <Route path="/podmienky" element={<Podmienky />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -29,32 +76,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/prihlasenie" element={<Login />} />
-            <Route path="/registracia" element={<Register />} />
-            <Route path="/kosik" element={<Cart />} />
-            <Route path="/kategoria/:slug" element={<Category />} />
-            <Route path="/produkt/:slug" element={<Product />} />
-            <Route path="/pokladna" element={<Checkout />} />
-            <Route path="/objednavka/success" element={<OrderSuccess />} />
-            <Route path="/objednavka/cancel" element={<OrderCancel />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/spravy" element={<Spravy />} />
-            <Route path="/predajne" element={<Predajne />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/sukromie" element={<Sukromie />} />
-            <Route path="/podmienky" element={<Podmienky />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <AppContent />
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
