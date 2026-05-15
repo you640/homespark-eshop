@@ -7,7 +7,6 @@ import { CategoryCard } from '@/components/categories/CategoryCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCategories, useFeaturedProducts } from '@/hooks/useProducts';
 import { SEO } from '@/components/seo/SEO';
-import heroBanner from '@/assets/hero-banner.jpg';
 
 const FEATURES = [
   { icon: Truck, title: 'Doprava zadarmo', description: 'Pri objednávke nad 49€' },
@@ -27,40 +26,7 @@ export default function Index() {
         description="Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie za skvelé ceny. Tisíce produktov s dopravou zadarmo nad 49€."
         canonical="/"
       />
-      {/* Hero Section */}
-      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-center">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroBanner})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/70 to-transparent" />
-        </div>
-        
-        <div className="relative section-container py-10 md:py-16">
-          <div className="max-w-md glass p-6 md:p-8 rounded-2xl animate-scale-in">
-            <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
-              Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie. 
-              Tisíce produktov za najlepšie ceny s dopravou zadarmo.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/kategoria/vsetko" className="btn-hero py-2 px-5 text-sm shadow-md hover:shadow-primary/30">
-                Nakupovať
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                asChild
-                className="border-primary/30 text-primary hover:bg-primary/10 hover:text-primary px-5 h-9"
-              >
-                <Link to="/spravy">
-                  Inšpirácie & tipy
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Features Bar */}
       <section className="bg-card border-y">
