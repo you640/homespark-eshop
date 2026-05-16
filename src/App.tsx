@@ -26,16 +26,22 @@ import { useCartStore } from "@/lib/cart-store";
 
 const queryClient = new QueryClient();
 
+interface NavigatorWithBadging extends Navigator {
+  setAppBadge?(contents?: number): Promise<void>;
+  clearAppBadge?(): Promise<void>;
+}
+
 const AppContent = () => {
   const itemCount = useCartStore((state) => state.getItemCount());
 
   useEffect(() => {
     // Badging API
     if ('setAppBadge' in navigator) {
+      const nav = navigator as NavigatorWithBadging;
       if (itemCount > 0) {
-        (navigator as any).setAppBadge(itemCount).catch(() => {});
+        nav.setAppBadge?.(itemCount).catch(() => {});
       } else {
-        (navigator as any).clearAppBadge().catch(() => {});
+        nav.clearAppBadge?.().catch(() => {});
       }
     }
   }, [itemCount]);

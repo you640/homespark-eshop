@@ -2,84 +2,73 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo/SEO";
 import { Helmet } from "react-helmet-async";
-import { Loader2, Copy, ExternalLink, ArrowLeft, LinkIcon, CopyCheck } from "lucide-react";
+import { Loader2, ArrowLeft, Check, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
-import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
+import { products as mockProducts } from "@/data/products";
+import { useCartStore } from "@/lib/cart-store";
+import type { ProductVariant } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
 
-const SITE_URL = "https://www.merkurymarket.sk";
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  short_description: string | null;
-  price_from: number;
-  product_images?: { url: string; alt_text: string | null }[];
-}
-
-interface PaymentLink {
-  id: string;
-  url: string;
-  label: string | null;
-  amount: number;
-  currency: string;
-}
+const SITE_URL = "https://www.homespark.sk";
 
 export default function Product() {
   const { slug } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [links, setLinks] = useState<PaymentLink[]>([]);
+  const [product, setProduct] = useState<typeof mockProducts[0] | null>(null);
   const [loading, setLoading] = useState(true);
+  const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     if (!slug) return;
-    (async () => {
-      setLoading(true);
-      const { data: p } = await supabase
-        .from("products")
-        .select("*, product_images(*)")
-        .eq("slug", slug)
-        .eq("is_active", true)
-        .maybeSingle();
-
-      setProduct(p as Product | null);
-
-      if (p) {
-        const { data: l } = await supabase
-          .from("product_payment_links")
-          .select("id, url, label, amount, currency")
-          .eq("product_id", (p as Product).id)
-          .eq("is_active", true)
-          .order("created_at", { ascending: false });
-        setLinks(l ?? []);
-      }
+    setLoading(true);
+    // Simulate network request
+    setTimeout(() => {
+      const p = mockProducts.find(p => p.id === slug);
+      setProduct(p || null);
       setLoading(false);
-    })();
+    }, 400);
   }, [slug]);
 
-  const copy = async (url: string) => {
-    await navigator.clipboard.writeText(url);
-    toast.success("URL skopírované");
-  };
+  const handleAddToCart = () => {
+    if (!product) return;
+    
+    // Create a mock variant for the cart
+    const variant: ProductVariant = {
+      id: `var-${product.id}`,
+      product_id: product.id,
+      sku: product.id,
+      title: 'Default',
+      price: product.sellPrice,
+      compare_at_price: Math.round(product.sellPrice * 1.2),
+      stock: 50,
+      attributes: {},
+      is_active: true,
+      sort_order: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
 
-  const copyAll = async () => {
-    if (!product || links.length === 0) return;
-    const text = links
-      .map((l) => `${l.label ?? product.name} – ${formatPrice(l.amount)}\n${l.url}`)
-      .join("\n\n");
-    await navigator.clipboard.writeText(text);
-    toast.success(`Skopírovaných ${links.length} odkazov`);
+    // Convert mock product to Cart expected product type
+    const cartProduct = {
+      ...product,
+      price_from: product.sellPrice,
+      brand: product.supplier,
+    } as unknown as import('@/lib/types').Product;
+
+    addItem(cartProduct, variant, 1);
+    toast.success('Pridané do košíka', {
+      description: product.name,
+      action: { label: 'Zobraziť košík', onClick: () => (window.location.href = '/kosik') },
+    });
   };
 
   if (loading) {
     return (
       <Layout>
         <div className="section-container py-24 text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
         </div>
       </Layout>
     );
@@ -88,25 +77,26 @@ export default function Product() {
   if (!product) {
     return (
       <Layout>
-        <div className="section-container py-16 text-center">
-          <h1 className="text-2xl font-display font-bold mb-4">Produkt nenájdený</h1>
-          <Button asChild><Link to="/">Späť na domov</Link></Button>
+        <div className="section-container py-24 text-center glass rounded-2xl max-w-2xl mx-auto mt-12">
+          <h1 className="text-3xl font-display font-bold mb-4">Produkt nenájdený</h1>
+          <p className="text-muted-foreground mb-8">Ľutujeme, ale produkt, ktorý hľadáte, už nie je v ponuke alebo neexistuje.</p>
+          <Button asChild className="btn-premium"><Link to="/">Späť na domov</Link></Button>
         </div>
       </Layout>
     );
   }
 
-  const image = product.product_images?.[0];
-  const canonical = `${SITE_URL}/produkt/${product.slug}`;
-  const desc = product.short_description ?? `${product.name} – kúpte v MerkuryMarket.`;
+  const image = product.images?.[0];
+  const canonical = `${SITE_URL}/produkt/${product.id}`;
+  const desc = product.description;
 
   return (
     <Layout>
       <SEO 
         title={product.name} 
         description={desc}
-        canonical={`/produkt/${product.slug}`}
-        ogImage={image?.url}
+        canonical={`/produkt/${product.id}`}
+        ogImage={image}
         ogType="product"
       />
       <Helmet>
@@ -115,129 +105,110 @@ export default function Product() {
           "@type": "Product",
           name: product.name,
           description: desc,
-          ...(image ? { image: image.url } : {}),
+          ...(image ? { image: image } : {}),
           offers: {
             "@type": "Offer",
             priceCurrency: "EUR",
-            price: product.price_from,
+            price: product.sellPrice,
             availability: "https://schema.org/InStock",
             url: canonical,
           },
         })}</script>
       </Helmet>
 
-      <div className="section-container py-6 md:py-10">
+      <div className="section-container py-8 md:py-12 animate-fade-in">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8"
         >
-          <ArrowLeft className="h-4 w-4" /> Späť
+          <ArrowLeft className="h-4 w-4" /> Späť do obchodu
         </Link>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="aspect-square bg-muted rounded-2xl overflow-hidden">
-            {image ? (
-              <img
-                src={image.url}
-                alt={image.alt_text ?? product.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                Bez obrázka
-              </div>
-            )}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
+          {/* Product Gallery */}
+          <div className="flex flex-col gap-4">
+            <div className="aspect-square bg-muted/20 rounded-3xl overflow-hidden glass p-4 flex items-center justify-center">
+              {image ? (
+                <img
+                  src={image}
+                  alt={product.name}
+                  className="w-full h-full object-contain hover:scale-105 transition-transform duration-700"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                  Bez obrázka
+                </div>
+              )}
+            </div>
+            
+            {/* Thumbnails (mocked for now since we have placeholders) */}
+            <div className="grid grid-cols-4 gap-4">
+              {product.images.map((img, i) => (
+                <div key={i} className="aspect-square bg-muted/20 rounded-xl overflow-hidden glass cursor-pointer border-2 border-transparent hover:border-primary transition-all">
+                   <img src={img} alt={`${product.name} ${i}`} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div>
-            <h1 className="text-2xl md:text-4xl font-display font-bold mb-3">{product.name}</h1>
-            <p className="text-2xl font-bold text-primary mb-6">
-              od {formatPrice(product.price_from)}
-            </p>
-            {product.short_description && (
-              <p className="text-muted-foreground mb-4">{product.short_description}</p>
-            )}
-            {product.description && (
-              <div className="prose prose-sm max-w-none text-foreground/80 whitespace-pre-line">
-                {product.description}
+          {/* Product Info */}
+          <div className="flex flex-col">
+            <div className="mb-2">
+              <span className="text-xs font-bold tracking-widest text-primary uppercase">{product.supplier}</span>
+            </div>
+            <h1 className="text-3xl md:text-5xl font-display font-bold mb-4 leading-tight">{product.name}</h1>
+            
+            <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-1">
+                <Star className="h-5 w-5 fill-primary text-primary" />
+                <Star className="h-5 w-5 fill-primary text-primary" />
+                <Star className="h-5 w-5 fill-primary text-primary" />
+                <Star className="h-5 w-5 fill-primary text-primary" />
+                <Star className="h-5 w-5 fill-primary text-primary opacity-50" />
+                <span className="text-sm font-medium ml-2">4.8 (124 recenzií)</span>
               </div>
-            )}
+            </div>
+
+            <div className="flex items-end gap-4 mb-8">
+              <p className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+                {formatPrice(product.sellPrice)}
+              </p>
+              <p className="text-xl text-muted-foreground line-through mb-1">
+                {formatPrice(Math.round(product.sellPrice * 1.2))}
+              </p>
+              <Badge className="mb-2 bg-destructive text-destructive-foreground">Zľava 20%</Badge>
+            </div>
+            
+            <div className="glass p-6 rounded-2xl mb-8">
+              <h3 className="font-semibold mb-2">Popis produktu</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {product.description}
+              </p>
+            </div>
+
+            <ul className="space-y-3 mb-10 text-sm font-medium">
+              <li className="flex items-center gap-3 text-foreground">
+                <div className="p-1 rounded-full bg-green-500/10 text-green-500"><Check className="h-4 w-4" /></div>
+                Skladom u dodávateľa ({product.supplier})
+              </li>
+              <li className="flex items-center gap-3 text-foreground">
+                <div className="p-1 rounded-full bg-green-500/10 text-green-500"><Check className="h-4 w-4" /></div>
+                Doručenie do 3-5 pracovných dní
+              </li>
+              <li className="flex items-center gap-3 text-foreground">
+                <div className="p-1 rounded-full bg-green-500/10 text-green-500"><Check className="h-4 w-4" /></div>
+                Záruka 24 mesiacov
+              </li>
+            </ul>
+
+            <div className="mt-auto pt-8 border-t flex flex-col sm:flex-row gap-4">
+              <button onClick={handleAddToCart} className="btn-premium flex-1 py-4 text-base">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Pridať do košíka
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Payment Links section */}
-        <section className="bg-card border rounded-2xl p-6 md:p-8">
-          <div className="flex items-start justify-between gap-4 mb-2 flex-wrap">
-            <div className="flex items-center gap-2">
-              <LinkIcon className="h-5 w-5 text-primary" />
-              <h2 className="text-lg md:text-xl font-display font-bold">Platobné odkazy</h2>
-            </div>
-            <div className="flex items-center gap-2">
-              {navigator.share && (
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  onClick={() => {
-                    navigator.share({
-                      title: product.name,
-                      text: desc,
-                      url: window.location.href,
-                    }).catch(() => {});
-                  }}
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Zdieľať
-                </Button>
-              )}
-              {links.length > 1 && (
-                <Button size="sm" variant="outline" onClick={copyAll}>
-                  <CopyCheck className="h-4 w-4 mr-2" />
-                  Kopírovať všetko ({links.length})
-                </Button>
-              )}
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground mb-6">
-            Priame Stripe Payment Links pre tento produkt – skopíruj a pošli zákazníkovi, alebo
-            otvor a zaplať.
-          </p>
-
-          {links.length === 0 ? (
-            <div className="text-center py-8 text-sm text-muted-foreground">
-              Pre tento produkt zatiaľ nie sú vytvorené žiadne Payment Linky.
-              <div className="mt-4">
-                <Button asChild variant="outline" size="sm">
-                  <Link to="/admin">Vytvoriť v admin paneli</Link>
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <ul className="space-y-2">
-              {links.map((l) => (
-                <li
-                  key={l.id}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 hover:bg-muted/70 transition-colors"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium truncate">{l.label ?? product.name}</p>
-                    <p className="text-xs text-muted-foreground truncate font-mono">{l.url}</p>
-                  </div>
-                  <span className="shrink-0 font-semibold text-sm">{formatPrice(l.amount)}</span>
-                  <Button size="sm" variant="outline" onClick={() => copy(l.url)}>
-                    <Copy className="h-4 w-4 md:mr-1" />
-                    <span className="hidden md:inline">Kopírovať</span>
-                  </Button>
-                  <Button size="sm" asChild>
-                    <a href={l.url} target="_blank" rel="noreferrer">
-                      <ExternalLink className="h-4 w-4 md:mr-1" />
-                      <span className="hidden md:inline">Otvoriť</span>
-                    </a>
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
       </div>
     </Layout>
   );
