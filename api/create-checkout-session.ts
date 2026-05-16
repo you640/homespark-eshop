@@ -33,7 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Build Stripe line items
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item) => ({
+    const line_items = items.map((item) => ({
       price_data: {
         currency: 'eur',
         product_data: {
@@ -60,7 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Build coupon/discount if applicable
-    const discounts: Stripe.Checkout.SessionCreateParams.Discount[] = [];
+    const discounts: { coupon: string }[] = [];
     if (discount > 0) {
       // Create an inline coupon for this session
       const coupon = await stripe.coupons.create({
