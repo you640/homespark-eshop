@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { ProductWithDetails } from '@/hooks/useProducts';
 import { formatPrice, getDiscountPercentage, cn } from '@/lib/utils';
@@ -32,7 +31,7 @@ export function ProductCard({ product, variant, image, className }: ProductCardP
     setTimeout(() => {
       setIsPulsing(false);
       navigate(`/produkt/${product.slug}`);
-    }, 200);
+    }, 150);
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -62,88 +61,100 @@ export function ProductCard({ product, variant, image, className }: ProductCardP
       onClick={handleCardClick}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleCardClick()}
       className={cn(
-        'product-card glass hover-lift group block cursor-pointer',
-        isPulsing && 'animate-pulse-scale',
+        'product-card group block cursor-pointer',
+        isPulsing && 'scale-[0.98]',
         className
       )}
     >
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-muted/20 rounded-t-xl">
+      <div className="relative aspect-square overflow-hidden bg-muted/20">
         {image?.url ? (
           <img
             src={image.url}
             alt={image.alt_text || product.name}
-            className="img-reveal h-full w-full object-cover mix-blend-multiply dark:mix-blend-normal"
+            className="img-reveal h-full w-full object-contain p-4"
             loading="lazy"
           />
         ) : (
-          <div className="h-full w-full flex items-center justify-center bg-muted/20">
-            <span className="text-4xl text-muted-foreground/30">📦</span>
+          <div className="h-full w-full flex items-center justify-center bg-muted/10">
+            <span className="text-5xl opacity-20">📦</span>
           </div>
         )}
 
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {hasDiscount && <span className="badge-premium bg-destructive text-destructive-foreground shadow-lg">-{discountPercent}%</span>}
-          {product.is_featured && <span className="badge-premium bg-primary text-primary-foreground shadow-lg">Novinka</span>}
+        {/* Badges */}
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          {hasDiscount && (
+            <span className="badge-premium bg-destructive text-white">-{discountPercent}%</span>
+          )}
+          {product.is_featured && (
+            <span className="badge-premium bg-foreground text-background">Novinka</span>
+          )}
         </div>
 
+        {/* Wishlist */}
         <button
           onClick={handleWishlist}
-          className="absolute top-3 right-3 p-2.5 rounded-full glass opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/40 dark:hover:bg-black/40 hover:scale-110"
+          className="absolute top-3 right-3 p-2 rounded-full bg-white/80 dark:bg-black/40 shadow-sm
+                     opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110"
           aria-label="Pridať do zoznamu želaní"
         >
-          <Heart className="h-5 w-5 text-foreground" />
+          <Heart className="h-4 w-4 text-foreground" />
         </button>
 
+        {/* Add to cart — slide up on hover (desktop) */}
         {variant && inStock && (
-          <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 hidden md:block bg-gradient-to-t from-background/90 to-transparent">
-            <button 
-              onClick={handleAddToCart} 
-              className="btn-premium w-full shadow-lg backdrop-blur-md"
+          <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 hidden md:block">
+            <button
+              onClick={handleAddToCart}
+              className="w-full flex items-center justify-center gap-2 py-2.5 bg-foreground text-background text-sm font-semibold rounded-xl hover:bg-primary hover:text-white transition-colors shadow-lg"
             >
-              <ShoppingCart className="h-4 w-4 mr-2" />
+              <ShoppingCart className="h-4 w-4" />
               Do košíka
             </button>
           </div>
         )}
       </div>
 
-      <div className="p-5 flex flex-col justify-between h-[180px]">
-        <div>
-          {product.brand && (
-            <p className="text-[11px] font-bold text-muted-foreground tracking-widest uppercase mb-2">{product.brand}</p>
+      {/* Content */}
+      <div className="p-4 md:p-5">
+        {product.brand && (
+          <p className="text-[11px] font-semibold text-muted-foreground tracking-widest uppercase mb-1.5">
+            {product.brand}
+          </p>
+        )}
+
+        <h3 className="font-sans font-semibold text-[15px] text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+          {product.name}
+        </h3>
+
+        {product.rating > 0 && (
+          <div className="flex items-center gap-1 mt-2">
+            <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+            <span className="text-xs font-semibold">{product.rating.toFixed(1)}</span>
+            <span className="text-xs text-muted-foreground">({product.rating_count})</span>
+          </div>
+        )}
+
+        <div className="mt-3 flex items-baseline gap-2">
+          <span className="text-xl font-bold text-foreground tracking-tight">{formatPrice(price)}</span>
+          {hasDiscount && (
+            <span className="text-sm text-muted-foreground line-through">{formatPrice(comparePrice)}</span>
           )}
-
-          <h3 className="font-display font-semibold text-lg text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-            {product.name}
-          </h3>
-
-          {product.rating > 0 && (
-            <div className="flex items-center gap-1.5 mt-2.5">
-              <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-              <span className="text-sm font-medium">{product.rating.toFixed(1)}</span>
-              <span className="text-xs text-muted-foreground ml-1">({product.rating_count})</span>
-            </div>
-          )}
-        </div>
-
-        <div className="mt-4 flex items-baseline gap-2 flex-wrap">
-          <span className="text-2xl font-bold text-foreground font-display tracking-tight">{formatPrice(price)}</span>
-          {hasDiscount && <span className="text-sm text-muted-foreground line-through font-medium">{formatPrice(comparePrice)}</span>}
         </div>
 
         {!inStock && (
-          <Badge variant="outline" className="mt-3 text-destructive border-destructive font-medium uppercase tracking-wider text-xs">
+          <Badge variant="outline" className="mt-2 text-destructive border-destructive text-xs">
             Vypredané
           </Badge>
         )}
 
+        {/* Mobile add-to-cart */}
         {variant && inStock && (
-          <button 
-            onClick={handleAddToCart} 
-            className="btn-premium w-full mt-4 md:hidden py-3"
+          <button
+            onClick={handleAddToCart}
+            className="w-full flex items-center justify-center gap-2 mt-3 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl md:hidden hover:bg-primary/90 transition-colors"
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
+            <ShoppingCart className="h-4 w-4" />
             Do košíka
           </button>
         )}

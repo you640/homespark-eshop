@@ -15,8 +15,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -83,8 +83,8 @@ export default {
         "2xl": "calc(var(--radius) + 8px)",
       },
       boxShadow: {
-        'product': 'var(--shadow-product)',
-        'hover': 'var(--shadow-hover)',
+        'product': 'var(--shadow-soft)',
+        'hover': 'var(--shadow-medium)',
       },
       keyframes: {
         "accordion-down": {

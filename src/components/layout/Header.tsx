@@ -17,13 +17,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
-  { name: 'Nábytok', slug: 'nabytok', icon: '🪑' },
-  { name: 'Dlažba a podlahy', slug: 'dlazba-podlahy', icon: '🏠' },
-  { name: 'Kúpeľne', slug: 'kupelne', icon: '🚿' },
-  { name: 'Dvere', slug: 'dvere', icon: '🚪' },
-  { name: 'Kúrenie', slug: 'kurenie', icon: '🔥' },
-  { name: 'Záhrada', slug: 'zahrada', icon: '🌿' },
-  { name: 'Náradie', slug: 'naradie', icon: '🔧' },
+  { name: 'Smart Home', slug: 'smart home', icon: '🏠' },
+  { name: 'Osvetlenie', slug: 'osvetlenie', icon: '💡' },
+  { name: 'Bytové doplnky', slug: 'bytové doplnky', icon: '🛋️' },
+  { name: 'Všetky produkty', slug: 'vsetko', icon: '✨' },
 ];
 
 export function Header() {
@@ -60,7 +57,7 @@ export function Header() {
         <div className="section-container flex h-9 items-center justify-between text-sm">
           <div className="flex items-center gap-4 text-muted-foreground">
             <span>📞 +421 123 456 789</span>
-            <span>✉️ info@merkurymarket.sk</span>
+            <span>✉️ info@homespark.sk</span>
           </div>
           <div className="flex items-center gap-4 text-muted-foreground">
             <Link to="/spravy" className="hover:text-foreground transition-colors">
@@ -88,7 +85,7 @@ export function Header() {
               <div className="flex flex-col h-full">
                 <div className="p-4 border-b">
                   <Link to="/" className="flex items-center gap-2">
-                    <span className="text-xl font-display font-bold text-gradient">MerkuryMarket</span>
+                    <span className="text-xl font-display font-bold text-gradient">Homespark</span>
                   </Link>
                 </div>
                 <nav className="flex-1 overflow-auto p-4">
@@ -128,7 +125,7 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <span className="text-xl md:text-2xl font-display font-bold text-gradient">
-              MerkuryMarket
+              Homespark
             </span>
           </Link>
 
