@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SEO } from "@/components/seo/SEO";
-import { Loader2, ArrowLeft, CreditCard } from "lucide-react";
+import { Loader2, ArrowLeft, CreditCard, Lock, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,6 @@ import { Layout } from "@/components/layout/Layout";
 import { useCartStore } from "@/lib/cart-store";
 import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export default function Checkout() {
@@ -38,20 +37,28 @@ export default function Checkout() {
     }
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
-        body: {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           email,
           shipping: cart.shipping,
           discount: cart.discount,
           items: items.map((i) => ({
-            name: `${i.product.name} – ${i.variant.title}`,
+            name: `${i.product.name}${i.variant.title !== 'Default' ? ` – ${i.variant.title}` : ''}`,
             price: i.variant.price,
             quantity: i.quantity,
             image: i.product.images?.[0]?.url,
           })),
-        },
+        }),
       });
-      if (error) throw error;
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Nepodarilo sa vytvoriť platobnú session");
+      }
+
       if (data?.url) {
         window.location.href = data.url;
       } else {
@@ -76,6 +83,7 @@ export default function Checkout() {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
+            {/* Contact info */}
             <div className="bg-card rounded-xl border p-6">
               <h2 className="font-semibold mb-4">Kontaktné údaje</h2>
               <div className="space-y-2">
@@ -85,6 +93,7 @@ export default function Checkout() {
               </div>
             </div>
 
+            {/* Payment method */}
             <div className="bg-card rounded-xl border p-6">
               <h2 className="font-semibold mb-2">Spôsob platby</h2>
               <div className="flex items-center gap-3 p-4 border-2 border-primary rounded-lg bg-primary/5">
@@ -94,9 +103,26 @@ export default function Checkout() {
                   <p className="text-xs text-muted-foreground">Visa, Mastercard, Apple Pay, Google Pay</p>
                 </div>
               </div>
+              <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
+                <Lock className="h-3.5 w-3.5" />
+                Po kliknutí na "Zaplatiť" budete presmerovaný na zabezpečenú stránku Stripe.
+              </p>
+            </div>
+
+            {/* Security badges */}
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Shield className="h-4 w-4" />
+                <span>SSL zabezpečenie</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Lock className="h-4 w-4" />
+                <span>PCI DSS kompatibilné</span>
+              </div>
             </div>
           </div>
 
+          {/* Order summary */}
           <div className="lg:col-span-1">
             <div className="bg-card rounded-xl border p-6 sticky top-24 space-y-4">
               <h2 className="font-semibold">Súhrn objednávky</h2>
@@ -111,11 +137,11 @@ export default function Checkout() {
               <div className="border-t pt-4 space-y-2 text-sm">
                 <div className="flex justify-between"><span className="text-muted-foreground">Medzisúčet</span><span>{formatPrice(cart.subtotal)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Doprava</span><span>{cart.shipping === 0 ? "Zadarmo" : formatPrice(cart.shipping)}</span></div>
-                {cart.discount > 0 && <div className="flex justify-between text-success"><span>Zľava</span><span>-{formatPrice(cart.discount)}</span></div>}
+                {cart.discount > 0 && <div className="flex justify-between text-green-600"><span>Zľava</span><span>-{formatPrice(cart.discount)}</span></div>}
                 <div className="flex justify-between text-lg font-bold border-t pt-2"><span>Celkom</span><span>{formatPrice(cart.total)}</span></div>
               </div>
               <Button size="lg" className="w-full" onClick={handlePay} disabled={loading}>
-                {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Presmerovávam...</> : <>Zaplatiť {formatPrice(cart.total)}</>}
+                {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Presmerovávam na Stripe...</> : <>Zaplatiť {formatPrice(cart.total)}</>}
               </Button>
               <p className="text-xs text-muted-foreground text-center">Bezpečná platba cez Stripe</p>
             </div>

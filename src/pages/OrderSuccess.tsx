@@ -5,7 +5,6 @@ import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { useCartStore } from "@/lib/cart-store";
-import { supabase } from "@/integrations/supabase/client";
 
 type Status = "loading" | "paid" | "pending" | "error";
 
@@ -24,10 +23,17 @@ export default function OrderSuccess() {
     }
     (async () => {
       try {
-        const { data, error } = await supabase.functions.invoke("verify-payment", {
-          body: { session_id: sessionId },
+        const response = await fetch("/api/verify-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId }),
         });
-        if (error) throw error;
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Chyba pri overení");
+        }
+
         if (data?.status === "paid") {
           setStatus("paid");
           clearCart();
@@ -55,8 +61,8 @@ export default function OrderSuccess() {
 
         {status === "paid" && (
           <>
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-success/10 flex items-center justify-center">
-              <CheckCircle2 className="h-12 w-12 text-success" />
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/10 flex items-center justify-center">
+              <CheckCircle2 className="h-12 w-12 text-green-500" />
             </div>
             <h1 className="text-3xl font-display font-bold mb-4">Ďakujeme za objednávku!</h1>
             <p className="text-muted-foreground mb-8">
