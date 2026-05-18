@@ -21,10 +21,10 @@ export function SEO({
   ogType = 'website',
   noIndex = false
 }: SEOProps) {
-  const siteName = "MerkuryMarket";
-  const fullTitle = title ? `${title} | ${siteName}` : `${siteName} – Všetko pre váš domov`;
-  const defaultDescription = "Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie za skvelé ceny. Doprava zadarmo nad 49€.";
-  const baseUrl = "https://www.merkurymarket.sk"; // Update this if domain changes
+  const siteName = "Homespark";
+  const fullTitle = title ? `${title} | ${siteName}` : `${siteName} – Smart home a doplnky pre moderné bývanie`;
+  const defaultDescription = "Smart home zariadenia, dizajnové osvetlenie a moderné bytové doplnky. Rýchle doručenie po celom Slovensku.";
+  const baseUrl = "https://homespark-eshop.vercel.app";
 
   return (
     <Helmet>

@@ -72,7 +72,7 @@ export function ProductCard({ product, variant, image, className }: ProductCardP
           <img
             src={image.url}
             alt={image.alt_text || product.name}
-            className="img-reveal h-full w-full object-contain p-4"
+            className="img-reveal h-full w-full object-cover"
             loading="lazy"
           />
         ) : (

@@ -42,13 +42,10 @@ export default function Checkout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          shipping: cart.shipping,
-          discount: cart.discount,
+          couponCode: cart.couponCode,
           items: items.map((i) => ({
-            name: `${i.product.name}${i.variant.title !== 'Default' ? ` – ${i.variant.title}` : ''}`,
-            price: i.variant.price,
+            productId: i.product.id,
             quantity: i.quantity,
-            image: i.product.images?.[0]?.url,
           })),
         }),
       });

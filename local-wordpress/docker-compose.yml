@@ -1,0 +1,57 @@
+services:
+  db:
+    image: mariadb:11.4
+    container_name: homespark-wp-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: homespark_wp
+      MARIADB_USER: homespark_wp
+      MARIADB_PASSWORD: homespark_wp_local_password
+      MARIADB_ROOT_PASSWORD: homespark_wp_local_root_password
+    volumes:
+      - homespark_wp_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:6.6-php8.3-apache
+    container_name: homespark-wp-wordpress
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "18095:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: homespark_wp
+      WORDPRESS_DB_USER: homespark_wp
+      WORDPRESS_DB_PASSWORD: homespark_wp_local_password
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_ENVIRONMENT_TYPE', 'local');
+    volumes:
+      - homespark_wp_wordpress_data:/var/www/html
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    profiles: ["tools"]
+    depends_on:
+      db:
+        condition: service_healthy
+      wordpress:
+        condition: service_started
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: homespark_wp
+      WORDPRESS_DB_USER: homespark_wp
+      WORDPRESS_DB_PASSWORD: homespark_wp_local_password
+    volumes:
+      - homespark_wp_wordpress_data:/var/www/html
+    working_dir: /var/www/html
+
+volumes:
+  homespark_wp_db_data:
+  homespark_wp_wordpress_data:

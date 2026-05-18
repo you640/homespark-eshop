@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button';
 
 const FOOTER_LINKS = {
   shop: [
-    { label: 'Nábytok', href: '/kategoria/nabytok' },
-    { label: 'Dlažba a podlahy', href: '/kategoria/dlazba-podlahy' },
-    { label: 'Kúpeľne', href: '/kategoria/kupelne' },
-    { label: 'Záhrada', href: '/kategoria/zahrada' },
-    { label: 'Náradie', href: '/kategoria/naradie' },
+    { label: 'Smart Home', href: '/kategoria/smart home' },
+    { label: 'Osvetlenie', href: '/kategoria/osvetlenie' },
+    { label: 'Bytové doplnky', href: '/kategoria/bytové doplnky' },
+    { label: 'Všetky produkty', href: '/kategoria/vsetko' },
   ],
   customer: [
     { label: 'Môj účet', href: '/ucet' },
@@ -67,16 +66,16 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block">
               <span className="text-2xl font-display font-bold text-primary">
-                MerkuryMarket
+                Homespark
               </span>
             </Link>
             <p className="mt-4 text-sm text-background/70 leading-relaxed">
               Váš spoľahlivý partner pre všetko do domácnosti. Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie za skvelé ceny.
             </p>
             <div className="mt-6 text-xs text-background/50 space-y-1">
-              <p className="font-semibold text-background/70">KsiX s.r.o.</p>
-              <p>Lužná 5, 851 04 Bratislava</p>
-              <p>IČO: 51907518 | DIČ: 2120826686</p>
+              <p className="font-semibold text-background/70">EB-EU s. r. o.</p>
+              <p>Kukučínova 22, 974 01 Banská Bystrica</p>
+              <p>IČO: 51 226 511</p>
             </div>
             <div className="flex gap-3 mt-6">
               <a 
@@ -154,8 +153,8 @@ export function Footer() {
                 <Mail className="h-5 w-5 shrink-0 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm text-background/70">E-mail</p>
-                  <a href="mailto:info@merkurymarket.sk" className="font-medium hover:text-primary transition-colors">
-                    info@merkurymarket.sk
+                  <a href="mailto:info@homespark.sk" className="font-medium hover:text-primary transition-colors">
+                    info@homespark.sk
                   </a>
                 </div>
               </li>
@@ -173,7 +172,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-background/60">
-            © 2026 MerkuryMarket. Všetky práva vyhradené.
+            © 2026 Homespark. Všetky práva vyhradené.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-background/60">
             {FOOTER_LINKS.info.slice(3).map((link) => (

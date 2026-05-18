@@ -18,4 +18,4 @@ Disallow: /admin
 Disallow: /pokladna
 Disallow: /objednavka
 
-Sitemap: https://www.merkurymarket.sk/sitemap.xml
+Sitemap: https://homespark-eshop.vercel.app/sitemap.xml

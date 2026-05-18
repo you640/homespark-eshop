@@ -1,19 +1,30 @@
 import Stripe from 'stripe';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-04-22.dahlia',
-});
+const STRIPE_API_VERSION = '2026-04-22.dahlia';
+
+function getStripeClient() {
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeKey) return null;
+  return new Stripe(stripeKey, { apiVersion: STRIPE_API_VERSION });
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Cache-Control', 'no-store');
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const stripe = getStripeClient();
+  if (!stripe) {
+    return res.status(503).json({ error: 'Platby nie sú nakonfigurované' });
   }
 
   try {
     const { session_id } = req.body as { session_id: string };
 
-    if (!session_id) {
+    if (!session_id || typeof session_id !== 'string' || !session_id.startsWith('cs_')) {
       return res.status(400).json({ error: 'session_id is required' });
     }
 
@@ -27,7 +38,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   } catch (err) {
     console.error('Stripe verify error:', err);
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    return res.status(500).json({ error: message });
+    return res.status(500).json({ error: 'Nepodarilo sa overiť platbu' });
   }
 }

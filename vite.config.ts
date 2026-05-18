@@ -19,9 +19,10 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'offline.html'],
       manifest: {
-        name: 'MerkuryMarket',
-        short_name: 'MerkuryMarket',
-        description: 'Kvalitný nábytok, podlahy, kúpeľne a záhradné vybavenie za skvelé ceny.',
+        name: 'Homespark',
+        short_name: 'Homespark',
+        description: 'Smart home zariadenia, dizajnové osvetlenie a moderné bytové doplnky.',
+        lang: 'sk',
         theme_color: '#f5920a',
         background_color: '#faf8f5',
         display: 'standalone',
@@ -45,16 +46,16 @@ export default defineConfig(({ mode }) => ({
         categories: ['shopping', 'lifestyle'],
         shortcuts: [
           {
-            name: 'Browse Categories',
-            short_name: 'Categories',
-            description: 'Browse all product categories',
+            name: 'Prehľadávať kategórie',
+            short_name: 'Kategórie',
+            description: 'Prehľadávať všetky produktové kategórie',
             url: '/kategoria/vsetko',
             icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }]
           },
           {
-            name: 'My Cart',
-            short_name: 'Cart',
-            description: 'View your shopping cart',
+            name: 'Môj košík',
+            short_name: 'Košík',
+            description: 'Zobraziť nákupný košík',
             url: '/kosik',
             icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }]
           }
@@ -63,21 +64,14 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         navigateFallback: '/offline.html',
+        navigateFallbackDenylist: [
+          /^\/wp-admin/,
+          /^\/wp-includes/,
+          /^\/wp-content/,
+          /^\/wp-json/,
+          /^\/wp-login\.php/
+        ],
         runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/bcaupbilfpjrvintlhfo\.supabase\.co\/rest\/v1\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
           {
             urlPattern: /^https:\/\/bcaupbilfpjrvintlhfo\.supabase\.co\/storage\/v1\/object\/public\/.*/i,
             handler: 'CacheFirst',

@@ -12,7 +12,7 @@ import { useCartStore } from "@/lib/cart-store";
 import type { ProductVariant } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 
-const SITE_URL = "https://www.homespark.sk";
+const SITE_URL = "https://homespark-eshop.vercel.app";
 
 export default function Product() {
   const { slug } = useParams();
@@ -132,7 +132,7 @@ export default function Product() {
                 <img
                   src={image}
                   alt={product.name}
-                  className="w-full h-full object-contain hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-muted-foreground">

@@ -10,7 +10,12 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.env
+.env.*
+!.env.example
 *.local
+playwright-report
+test-results
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +28,9 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Local WordPress environment
+local-wordpress/data/
+local-wordpress/*.log
+local-wordpress/.env.local
+

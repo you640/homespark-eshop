@@ -16,6 +16,9 @@ import { cn } from '@/lib/utils';
 
 const CATEGORY_NAMES: Record<string, string> = {
   'vsetko': 'Všetky produkty',
+  'smart home': 'Smart Home',
+  'osvetlenie': 'Osvetlenie',
+  'bytové doplnky': 'Bytové doplnky',
   'nabytok': 'Nábytok',
   'dlazba-podlahy': 'Dlažba a podlahy',
   'kupelne': 'Kúpeľne',
@@ -131,7 +134,7 @@ export default function CategoryPage() {
     <Layout>
       <SEO 
         title={categoryName} 
-        description={`${categoryName} v MerkuryMarket. Kvalita za skvelé ceny, doprava zadarmo nad 49€.`}
+        description={`${categoryName} v Homespark. Smart home, osvetlenie a doplnky pre moderné bývanie.`}
         canonical={`/kategoria/${slug ?? 'vsetko'}`}
       />
       <div className="section-container py-6 md:py-8">

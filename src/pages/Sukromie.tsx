@@ -12,8 +12,8 @@ export default function Sukromie() {
           <section>
             <h2 className="text-xl font-bold text-foreground">1. Správca údajov</h2>
             <p>
-              Správcom vašich osobných údajov je spoločnosť <strong>KsiX s.r.o.</strong>, so sídlom Lužná 5, 851 04 Bratislava, 
-              IČO: 51907518 (ďalej len „Správca“).
+              Správcom vašich osobných údajov je spoločnosť <strong>EB-EU s. r. o.</strong>, so sídlom Kukučínova 22, 974 01 Banská Bystrica, 
+              IČO: 51 226 511 (ďalej len „Správca“).
             </p>
           </section>
 

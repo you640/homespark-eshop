@@ -13,8 +13,8 @@ export default function Podmienky() {
             <h2 className="text-xl font-bold text-foreground">1. Úvodné ustanovenia</h2>
             <p>
               Tieto všeobecné obchodné podmienky (ďalej len „VOP“) upravujú práva a povinnosti medzi spoločnosťou 
-              <strong> KsiX s.r.o.</strong>, so sídlom Lužná 5, 851 04 Bratislava, IČO: 51907518 (ďalej len „Predávajúci“) 
-              a kupujúcim pri predaji tovaru prostredníctvom internetového obchodu MerkuryMarket.
+              <strong> EB-EU s. r. o.</strong>, so sídlom Kukučínova 22, 974 01 Banská Bystrica, IČO: 51 226 511 (ďalej len „Predávajúci“) 
+              a kupujúcim pri predaji tovaru prostredníctvom internetového obchodu Homespark.
             </p>
           </section>
 
@@ -47,7 +47,7 @@ export default function Podmienky() {
             <h2 className="text-xl font-bold text-foreground">5. Odstúpenie od zmluvy</h2>
             <p>
               Spotrebiteľ má právo odstúpiť od zmluvy bez udania dôvodu v lehote 14 dní od prevzatia tovaru. 
-              MerkuryMarket rozširuje túto lehotu na <strong>30 dní</strong> pre vybrané produkty. Tovar musí byť vrátený 
+              Homespark rozširuje túto lehotu na <strong>30 dní</strong> pre vybrané produkty. Tovar musí byť vrátený 
               nepoužitý a v pôvodnom obale.
             </p>
           </section>

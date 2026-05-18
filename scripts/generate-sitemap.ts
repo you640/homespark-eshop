@@ -2,7 +2,7 @@
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
-const BASE_URL = "https://www.merkurymarket.sk";
+const BASE_URL = "https://homespark-eshop.vercel.app";
 
 interface SitemapEntry {
   path: string;
@@ -13,13 +13,9 @@ interface SitemapEntry {
 const entries: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/kategoria/vsetko", changefreq: "daily", priority: "0.9" },
-  { path: "/kategoria/nabytok", changefreq: "weekly", priority: "0.8" },
-  { path: "/kategoria/dlazba-podlahy", changefreq: "weekly", priority: "0.8" },
-  { path: "/kategoria/kupelne", changefreq: "weekly", priority: "0.8" },
-  { path: "/kategoria/dvere", changefreq: "weekly", priority: "0.8" },
-  { path: "/kategoria/kurenie", changefreq: "weekly", priority: "0.8" },
-  { path: "/kategoria/zahrada", changefreq: "weekly", priority: "0.8" },
-  { path: "/kategoria/naradie", changefreq: "weekly", priority: "0.8" },
+  { path: "/kategoria/smart%20home", changefreq: "weekly", priority: "0.8" },
+  { path: "/kategoria/osvetlenie", changefreq: "weekly", priority: "0.8" },
+  { path: "/kategoria/bytov%C3%A9%20doplnky", changefreq: "weekly", priority: "0.8" },
   { path: "/prihlasenie", changefreq: "yearly", priority: "0.3" },
   { path: "/registracia", changefreq: "yearly", priority: "0.3" },
 ];

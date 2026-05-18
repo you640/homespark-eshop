@@ -1,0 +1,75 @@
+services:
+  # 1. Secured MariaDB Database
+  db:
+    image: mariadb:11.4
+    container_name: homespark-prod-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: homespark_wp_prod
+      MARIADB_USER: homespark_wp_prod
+      MARIADB_PASSWORD: homespark_wp_prod_password
+      MARIADB_ROOT_PASSWORD: homespark_wp_prod_root_password
+    volumes:
+      - homespark_prod_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. WordPress Headless CMS
+  wordpress:
+    image: wordpress:6.6-php8.3-apache
+    container_name: homespark-prod-wordpress
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:18090:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: homespark_wp_prod
+      WORDPRESS_DB_USER: homespark_wp_prod
+      WORDPRESS_DB_PASSWORD: homespark_wp_prod_password
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_ENVIRONMENT_TYPE', 'production');
+        define('WP_HOME', 'https://stahovanie.website');
+        define('WP_SITEURL', 'https://stahovanie.website');
+    volumes:
+      - homespark_prod_wordpress_data:/var/www/html
+
+  # 3. Dockerized React Storefront
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: homespark-prod-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18080:80"
+    depends_on:
+      - wordpress
+
+  # 4. WordPress CLI (only launched manually via --profile tools)
+  wpcli:
+    image: wordpress:cli-php8.3
+    profiles: ["tools"]
+    depends_on:
+      db:
+        condition: service_healthy
+      wordpress:
+        condition: service_started
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: homespark_wp_prod
+      WORDPRESS_DB_USER: homespark_wp_prod
+      WORDPRESS_DB_PASSWORD: homespark_wp_prod_password
+    volumes:
+      - homespark_prod_wordpress_data:/var/www/html
+    working_dir: /var/www/html
+
+volumes:
+  homespark_prod_db_data:
+  homespark_prod_wordpress_data:
+

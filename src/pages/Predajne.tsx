@@ -6,7 +6,7 @@ export default function Predajne() {
   return (
     <Layout>
       <Helmet>
-        <title>Naše predajne – MerkuryMarket</title>
+        <title>Naše predajne – Homespark</title>
       </Helmet>
       <div className="section-container py-12 md:py-20">
         <h1 className="text-3xl md:text-5xl font-display font-bold mb-12 text-center">Naše predajne</h1>

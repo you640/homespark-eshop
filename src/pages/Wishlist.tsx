@@ -6,7 +6,7 @@ export default function Wishlist() {
   return (
     <Layout>
       <Helmet>
-        <title>Môj zoznam želaní – MerkuryMarket</title>
+        <title>Môj zoznam želaní – Homespark</title>
       </Helmet>
       <div className="section-container py-12 md:py-32 text-center">
         <div className="inline-flex p-6 bg-primary/5 rounded-full mb-8 animate-float">

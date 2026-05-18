@@ -1,4 +1,4 @@
-// E-commerce types for MerkuryMarket
+// E-commerce types for Homespark
 
 export interface Category {
   id: string;

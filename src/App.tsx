@@ -19,6 +19,11 @@ import Predajne from "./pages/Predajne";
 import Wishlist from "./pages/Wishlist";
 import Sukromie from "./pages/Sukromie";
 import Podmienky from "./pages/Podmienky";
+import Search from "./pages/Search";
+import Account from "./pages/Account";
+import Orders from "./pages/Orders";
+import ForgotPassword from "./pages/ForgotPassword";
+import { About, Contact, Shipping, Returns, Tracking } from "./pages/Info";
 import NotFound from "./pages/NotFound";
 
 import { useEffect } from "react";
@@ -26,10 +31,10 @@ import { useCartStore } from "@/lib/cart-store";
 
 const queryClient = new QueryClient();
 
-interface NavigatorWithBadging extends Navigator {
+type NavigatorWithBadging = Navigator & {
   setAppBadge?(contents?: number): Promise<void>;
   clearAppBadge?(): Promise<void>;
-}
+};
 
 const AppContent = () => {
   const itemCount = useCartStore((state) => state.getItemCount());
@@ -67,6 +72,16 @@ const AppContent = () => {
         <Route path="/spravy" element={<Spravy />} />
         <Route path="/predajne" element={<Predajne />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/vyhladavanie" element={<Search />} />
+        <Route path="/ucet" element={<Account />} />
+        <Route path="/ucet/objednavky" element={<Orders />} />
+        <Route path="/sledovanie" element={<Tracking />} />
+        <Route path="/o-nas" element={<About />} />
+        <Route path="/kontakt" element={<Contact />} />
+        <Route path="/doprava" element={<Shipping />} />
+        <Route path="/vratenie" element={<Returns />} />
+        <Route path="/zabudnute-heslo" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ForgotPassword />} />
         <Route path="/sukromie" element={<Sukromie />} />
         <Route path="/podmienky" element={<Podmienky />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
